@@ -1,0 +1,2 @@
+/Users/liurongqian/Desktop/flutterwithoutimport/android/app/.cxx/Debug/11w251b1/x86/CMakeFiles/edit_cache.dir
+/Users/liurongqian/Desktop/flutterwithoutimport/android/app/.cxx/Debug/11w251b1/x86/CMakeFiles/rebuild_cache.dir
