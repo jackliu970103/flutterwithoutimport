@@ -9,17 +9,15 @@ class WeeklySummary extends StatelessWidget {
   final List<Task> restList;
 
   const WeeklySummary({super.key, required this.workList, required this.restList});
-
   @override
   Widget build(BuildContext context) {
     int totalWorkSeconds = workList.fold(0, (sum, task) => sum + task.remainingSeconds);
     int totalRestSeconds = restList.fold(0, (sum, task) => sum + task.remainingSeconds);
-
     return Scaffold(
       appBar: AppBar(title: Text("Weekly Summary")),
       body: Center(
         child: CustomPaint(
-          size: Size(300, 200), // 設定畫布大小
+          size: Size(300, 200),
           painter: BarChartPainter(totalWorkSeconds, totalRestSeconds),
         ),
       ),
@@ -49,7 +47,6 @@ class BarChartPainter extends CustomPainter {
     double workBarHeight = (workSeconds / maxTime) * size.height;
     double restBarHeight = (restSeconds / maxTime) * size.height;
 
-    // 繪製工作時間長條
     canvas.drawRect(
       Rect.fromLTWH(size.width * 0.1, size.height - workBarHeight, barWidth, workBarHeight),
       workPaint,
@@ -59,7 +56,6 @@ class BarChartPainter extends CustomPainter {
       borderPaint,
     );
 
-    // 繪製休息時間長條
     canvas.drawRect(
       Rect.fromLTWH(size.width * 0.5, size.height - restBarHeight, barWidth, restBarHeight),
       restPaint,
@@ -69,7 +65,6 @@ class BarChartPainter extends CustomPainter {
       borderPaint,
     );
 
-    // 繪製標籤
     final textStyle = TextStyle(color: Colors.black, fontSize: 16);
     final textPainterWork = TextPainter(
       text: TextSpan(text: "Work", style: textStyle),

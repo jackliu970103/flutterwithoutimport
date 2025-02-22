@@ -33,21 +33,19 @@ class _SplashscreenState extends State<Splashscreen>with TickerProviderStateMixi
       body: Padding(padding: EdgeInsets.all(30),child: Column(
         children: [
           Align(
-
             child: Column(
           children: [
-            Text("asdasdasd"),
-            AnimatedBuilder(animation: animation, builder: (child,context) =>Container(
+            SizedBox(height: 300,),
+            Text("Forest",style: TextStyle(fontSize: 30),),
+            AnimatedBuilder(animation: animation, builder: (context,child) =>Container(
               width: animation.value,
               height: animation.value,
-            ),child: Icon(Icons.add,size: 100,),),
+              child: child,
+            ),child: Icon(Icons.access_time_rounded,size: 100,),),
         ],
       ) ,
             alignment: Alignment.center,
           )
-
-
-
         ],
       ),),
     );
