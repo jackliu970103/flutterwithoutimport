@@ -4,5 +4,5 @@ import 'package:flutterwithoutimport/shake.dart';
 import 'package:flutterwithoutimport/splashscreen.dart';
 
 void main() {
-  runApp(MaterialApp(home: ShakeDetectorScreen(),));
+  runApp(MaterialApp(home: Splashscreen(),));
 }
