@@ -261,6 +261,7 @@ class ClockPainter extends CustomPainter {
         center.dx + radius * cos(angle),
         center.dy + radius * sin(angle),
       );
+
       paint.color = i % 5 == 0 ? Colors.white : Colors.white.withOpacity(0.5);
       paint.strokeWidth = 2.0;
       canvas.drawLine(startOffset, endOffset, paint);
