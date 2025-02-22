@@ -45,6 +45,7 @@ class _SplashscreenState extends State<Splashscreen>
         padding: EdgeInsets.all(30),
         child: Column(
           children: [
+            SizedBox(height: 100,),
             Align(
               child: Column(
                 children: [
@@ -56,7 +57,7 @@ class _SplashscreenState extends State<Splashscreen>
                           height: animation.value,
                           child: child,
                         ),
-                    child: Icon(Icons.add, size: 100),
+                    child: Icon(Icons.lock_clock, size: 100),
                   ),
                 ],
               ),
