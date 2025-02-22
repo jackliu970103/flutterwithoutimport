@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:ffi' as fii;
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutterwithoutimport/WeeklySummary.dart';
 
@@ -46,6 +48,7 @@ class _TimerscreenState extends State<Timerscreen> {
       body: Align(
         alignment: Alignment.center,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               _activeTask != null ? _activeTask!.getFormattedTime() : "No active timer",
@@ -56,6 +59,17 @@ class _TimerscreenState extends State<Timerscreen> {
               Text(
                 "Current Task: ${_activeTask!.taskName}",
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+            const SizedBox(height: 20),
+            if (_activeTask != null)
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: CustomPaint(
+                  painter: ClockPainter(
+                    _activeTask!.remainingSeconds % 60.toDouble(),
+                  ),
+                ),
               ),
           ],
         ),
@@ -127,12 +141,10 @@ class _TimerscreenState extends State<Timerscreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  // 讓 ReorderableListView 佔滿可用空間
                   SizedBox(
-                    height: 300, // 限制最大高度，避免影響 BottomSheet 滑動
+                    height: 500,
                     child: ReorderableListView.builder(
-                      physics: const NeverScrollableScrollPhysics(), // 禁用內部滾動，讓 BottomSheet 控制滾動
-                      shrinkWrap: true, // 只佔用所需空間
+                      shrinkWrap: false,
                       itemCount: _taskList.length,
                       itemBuilder: (context, index) {
                         final task = _taskList[index];
@@ -226,3 +238,49 @@ class Task {
     _timer?.cancel();
   }
 }
+class ClockPainter extends CustomPainter {
+  final double remainingTime; // 剩餘時間，單位：秒
+
+  ClockPainter(this.remainingTime);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    final paint = Paint()..color = Colors.blueAccent;
+    canvas.drawCircle(center, radius, paint);
+
+    for (int i = 0; i < 60; i++) {
+      final angle = 2 * pi * i / 60;
+      final startOffset = Offset(
+        center.dx + radius * 0.9 * cos(angle),
+        center.dy + radius * 0.9 * sin(angle),
+      );
+      final endOffset = Offset(
+        center.dx + radius * cos(angle),
+        center.dy + radius * sin(angle),
+      );
+      paint.color = i % 5 == 0 ? Colors.white : Colors.white.withOpacity(0.5);
+      paint.strokeWidth = 2.0;
+      canvas.drawLine(startOffset, endOffset, paint);
+    }
+
+    final remainingAngle = 2 * pi * (1 - remainingTime / 60);
+    final handLength = radius * 0.7;
+    final handOffset = Offset(
+      center.dx + handLength * cos(remainingAngle),
+      center.dy + handLength * sin(remainingAngle),
+    );
+    paint.color = Colors.red;
+    paint.strokeWidth = 4.0;
+    canvas.drawLine(center, handOffset, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+
