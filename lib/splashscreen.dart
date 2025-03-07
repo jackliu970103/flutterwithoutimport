@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutterwithoutimport/Timer.dart';
+import 'package:flutterwithoutimport/stopwh.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -33,7 +34,7 @@ class _SplashscreenState extends State<Splashscreen>
     Future.delayed(Duration(seconds: 3), () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Timerscreen()),
+        MaterialPageRoute(builder: (context) => TimerScreen()),
       );
     });
   }
