@@ -5,5 +5,5 @@ import 'package:flutterwithoutimport/splashscreen.dart';
 import 'package:flutterwithoutimport/stopwh.dart';
 
 void main() {
-  runApp(MaterialApp(home: WeeklysummaryScreen(),));
+  runApp(MaterialApp(home: TimerScreen(),));
 }

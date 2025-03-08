@@ -177,7 +177,7 @@ class BarChartPainter extends CustomPainter {
       double y = size.height - 10 - barHeight;
 
       // 畫柱狀
-      canvas.drawRect(Rect.fromLTWH(x, y, barWidth, barHeight), barPaint);
+      canvas.drawRect(Rect.fromLTWH(x, y, barWidth, size.height - 10), barPaint);
 
       // 畫標籤
       TextPainter textPainter = TextPainter(
@@ -188,7 +188,7 @@ class BarChartPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(x, size.height - 10));
+      textPainter.paint(canvas, Offset(x, barHeight));
     }
   }
 
