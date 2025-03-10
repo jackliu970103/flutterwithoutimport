@@ -2,10 +2,11 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutterwithoutimport/Timer.dart';
-import 'package:flutterwithoutimport/stopwh.dart';
 
 class Splashscreen extends StatefulWidget {
-  const Splashscreen({super.key});
+  final Function(ThemeData) updateTheme;
+
+  Splashscreen({required this.updateTheme});
 
   @override
   State<Splashscreen> createState() => _SplashscreenState();
@@ -18,8 +19,8 @@ class _SplashscreenState extends State<Splashscreen>
 
   @override
   void dispose() {
+    animationController.dispose();
     super.dispose();
-    animationController.reverse();
   }
 
   @override
@@ -32,9 +33,9 @@ class _SplashscreenState extends State<Splashscreen>
     animation = Tween(begin: 50.0, end: 150.0).animate(animationController);
     animationController.forward();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => TimerScreen()),
+        MaterialPageRoute(builder: (context) => TimerScreen(updateTheme: widget.updateTheme)),
       );
     });
   }
@@ -54,10 +55,10 @@ class _SplashscreenState extends State<Splashscreen>
                     animation: animation,
                     builder:
                         (context, child) => Container(
-                          width: animation.value,
-                          height: animation.value,
-                          child: child,
-                        ),
+                      width: animation.value,
+                      height: animation.value,
+                      child: child,
+                    ),
                     child: Icon(Icons.lock_clock, size: 100),
                   ),
                 ],

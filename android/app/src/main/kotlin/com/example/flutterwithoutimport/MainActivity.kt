@@ -1,55 +1,64 @@
 package com.example.flutterwithoutimport
-
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
-import io.flutter.plugin.common.MethodCall
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import kotlin.math.sqrt
 
-class MainActivity : FlutterActivity(), SensorEventListener {
-    private lateinit var sensorManager: SensorManager
-    private var accelerometer: Sensor? = null
-    private var shakeThreshold = 12.0
-    private var lastShakeTime: Long = 0
+class MainActivity : FlutterActivity() {
+    private val CHANNEL = "com.example.flutterwithoutimport/vibration"
+    private val REQUEST_CODE_VIBRATE = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        // ✅ 在 Android 13+ (API 33+) 以上請求 VIBRATE 權限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.VIBRATE), REQUEST_CODE_VIBRATE)
+            }
+        }
+    }
 
-        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, "shake_channel").setMethodCallHandler { call, result ->
-            if (call.method == "startListening") {
-                sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "vibrate") {
+                val duration = call.argument<Int>("duration")?.toLong() ?: 500L
+                vibrate(duration)
                 result.success(null)
+            } else {
+                result.notImplemented()
             }
         }
     }
 
-    override fun onSensorChanged(event: SensorEvent?) {
-        if (event == null) return
-        val x = event.values[0]
-        val y = event.values[1]
-        val z = event.values[2]
-        val acceleration = sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH
-
-        if (acceleration > shakeThreshold) {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastShakeTime > 500) {
-                lastShakeTime = currentTime
-                MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, "shake_channel").invokeMethod("onShake", null)
+    private fun vibrate(duration: Long) {
+        val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        if (vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                vibrator.vibrate(duration)
             }
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-    override fun onDestroy() {
-        super.onDestroy()
-        sensorManager.unregisterListener(this)
+    // ✅ 處理權限請求結果
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_VIBRATE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // 使用者同意振動權限
+            } else {
+                // 使用者拒絕權限，提醒開啟權限
+            }
+        }
     }
 }
