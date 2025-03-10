@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterwithoutimport/Settingpage.dart';
@@ -14,6 +15,9 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
+  void shakeshake(){
+    HapticFeedback.heavyImpact();
+  }
 
   final taskNameController = TextEditingController();
   final taskHourController = TextEditingController(text: "0");

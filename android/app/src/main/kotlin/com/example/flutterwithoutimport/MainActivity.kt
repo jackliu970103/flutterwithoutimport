@@ -55,9 +55,9 @@ class MainActivity : FlutterActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_VIBRATE) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // 使用者同意振動權限
+                android.util.Log.d(TAG, "onRequestPermissionsResult:  successful")
             } else {
-                // 使用者拒絕權限，提醒開啟權限
+                android.util.Log.d(TAG, "onRequestPermissionsResult: fail")
             }
         }
     }
