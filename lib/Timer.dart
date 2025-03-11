@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterwithoutimport/Settingpage.dart';
+import 'package:flutterwithoutimport/TaskScreen.dart';
 import 'package:flutterwithoutimport/WeeklySummary.dart';
 import 'package:flutterwithoutimport/Vib.dart';
 
@@ -42,6 +43,7 @@ class _TimerScreenState extends State<TimerScreen> {
         setState(() {});
       },
       onComplete: () {
+        HapticFeedback.heavyImpact();
         setState(() {
           nowTask = null;
         });
@@ -106,6 +108,12 @@ class _TimerScreenState extends State<TimerScreen> {
                   title: Text("周度總結"),
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>WeeklysummaryScreen()));
+                  },
+                ),
+                ListTile(
+                  title: Text("我的任務清單"),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Taskscreen(TaskList: taskList)));
                   },
                 )
               ],

@@ -71,7 +71,9 @@ class _WeeklysummaryScreenState extends State<WeeklysummaryScreen> {
 
   Future<List<WeeklySchedule>> fetchSchedule() async {
     final client = HttpClient();
-
+    String isoString = "2025-03-10T14:07:00Z";
+    DateTime dateTime = DateTime.parse(isoString);
+    print(dateTime.millisecondsSinceEpoch);
     try {
       final request = await client.getUrl(Uri.parse('https://skills-todo-api.eliaschen.dev/Task'));
       final response = await request.close();
